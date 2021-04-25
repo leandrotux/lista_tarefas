@@ -1,8 +1,10 @@
+import 'dart:ffi';
+
+import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -10,44 +12,77 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  List _listaTarefas = [];
+
+  _salvarArquivo() async {
+    final diretorio = await getApplicationDocumentsDirectory();
+    var arquivo = File("${diretorio.path}/dados.json");
+
+    //Criar dados
+    Map<String, Object> tarefa = Map();
+
+    tarefa["titulo"] = "Ir ao mercado";
+    tarefa["realizada"] = false;
+
+    _listaTarefas.add(tarefa);
+
+    String dados = json.encode(_listaTarefas);
+    arquivo.writeAsString(dados);
+  }
+
   @override
   Widget build(BuildContext context) {
+    _salvarArquivo();
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("Lista de Tarefas"),
+        title: Text("Lista de tarefas"),
         backgroundColor: Colors.purple,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.purple,
-        foregroundColor: Colors.white,
-        elevation: 6,
-        child: Icon(Icons.add),
-        onPressed: () {
-          showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  title: Text("Adicionar tarefa"),
-                  content: TextField(
-                    decoration: InputDecoration(labelText: "Digite sua tarefa"),
-                    onChanged: (text) {},
-                  ),
-                  actions: [
-                    FlatButton(
-                      child: Text("Cancelar"),
-                      onPressed: () => Navigator.pop(context),
+          child: Icon(Icons.add),
+          backgroundColor: Colors.purple,
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text("Adicionar Tarefa"),
+                    content: TextField(
+                      decoration:
+                          InputDecoration(labelText: "Digite sua tarefa"),
+                      onChanged: (text) {},
                     ),
-                    FlatButton(
-                      child: Text("Adicionar"),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    )
-                  ],
-                );
-              });
-        },
+                    actions: <Widget>[
+                      FlatButton(
+                        child: Text("Cancelar"),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                      FlatButton(
+                        child: Text("Salvar"),
+                        onPressed: () {
+                          //salvar
+
+                          Navigator.pop(context);
+                        },
+                      )
+                    ],
+                  );
+                });
+          }),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: ListView.builder(
+                itemCount: _listaTarefas.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(_listaTarefas[index]),
+                  );
+                }),
+          )
+        ],
       ),
     );
   }
