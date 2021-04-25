@@ -19,7 +19,7 @@ class _HomeState extends State<Home> {
     var arquivo = File("${diretorio.path}/dados.json");
 
     //Criar dados
-    Map<String, Object> tarefa = Map();
+    Map<String, dynamic> tarefa = Map();
 
     tarefa["titulo"] = "Ir ao mercado";
     tarefa["realizada"] = false;
