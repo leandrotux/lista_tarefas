@@ -51,7 +51,6 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _lerArquivo().then((dados) {
       setState(() {
@@ -62,7 +61,6 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    //_salvarArquivo();
     print("itens: " + _listaTarefas.toString());
 
     return Scaffold(
